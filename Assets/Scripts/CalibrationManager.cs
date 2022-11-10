@@ -246,26 +246,31 @@ public class CalibrationManager : MonoBehaviour, IMixedRealitySpeechHandler
 
     public void OnSpeechKeywordRecognized(SpeechEventData eventData)
     {
-        //MyInfo.text += $"word={eventData.Command.Keyword.ToLower()}\r\n";
-
+        MyInfo.text = $"word={eventData.Command.Keyword.ToLower()}\r\n";
+        int val = 0;
         switch (eventData.Command.Keyword.ToLower())
         {
             case "lock scan":
                 _isLocked = true;
+                val = Convert.ToInt32(_calibrate * 1000);
+                MyInfo.text += $"calibrate={val} mm\r\n";
                 break;
 
             case "start scan":
                 _isLocked = false;
                 break;
 
-            case "forward":
+            case "move forward":
                 _calibrate -= 0.001f;
-                MyInfo.text += $"_calibrate={_calibrate}\r\n";
+                val = Convert.ToInt32(_calibrate * 1000);
+
+                MyInfo.text += $"calibrate={val} mm\r\n";
                 break;
 
-            case "backward":
+            case "move back":
                 _calibrate += 0.001f;
-                MyInfo.text += $"_calibrate={_calibrate}\r\n";
+                val = Convert.ToInt32(_calibrate * 1000);
+                MyInfo.text += $"calibrate={val} mm\r\n";
                 break;
 
             default:

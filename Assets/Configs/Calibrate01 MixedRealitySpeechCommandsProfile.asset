@@ -24,14 +24,14 @@ MonoBehaviour:
       description: Toggle Diagnostics
       axisConstraint: 0
   - localizationKey: 
-    keyword: forward
+    keyword: move forward
     keyCode: 0
     action:
       id: 0
       description: Toggle Diagnostics
       axisConstraint: 0
   - localizationKey: 
-    keyword: backward
+    keyword: move back
     keyCode: 0
     action:
       id: 0
