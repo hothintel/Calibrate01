@@ -125,6 +125,55 @@ public sealed class Helpers
         return axis;
     }
 
+    public static GameObject CreateLine(Material mat, float lineWidth, Vector3 startPt, Vector3 endPt)
+    {
+        GameObject axis = new GameObject();
+
+        // Create X axis
+        List<Vector3> xVectors = new List<Vector3>();
+        xVectors.Add(startPt);
+        xVectors.Add(endPt);
+        GameObject originX = new GameObject();
+        LineRenderer xLine = originX.AddComponent<LineRenderer>();
+        xLine.startWidth = lineWidth;
+        xLine.endWidth = lineWidth;
+        xLine.material = mat;
+        xLine.SetPositions(xVectors.ToArray());
+        xLine.useWorldSpace = true;
+        xLine.shadowCastingMode = ShadowCastingMode.Off;
+        originX.transform.parent = axis.transform;
+
+        return axis;
+    }
+
+    public static LineRenderer UpdateLine(LineRenderer xLine, Material mat, float lineWidth, Vector3 startPt, Vector3 endPt)
+    {
+        // Create X axis
+        List<Vector3> xVectors = new List<Vector3>();
+        xVectors.Add(startPt);
+        xVectors.Add(endPt);
+        xLine.startWidth = lineWidth;
+        xLine.endWidth = lineWidth;
+        xLine.material = mat;
+        xLine.SetPositions(xVectors.ToArray());
+        xLine.useWorldSpace = true;
+        xLine.shadowCastingMode = ShadowCastingMode.Off;
+
+        return xLine;
+    }
+
+    public static LineRenderer UpdateLine(LineRenderer xLine, Vector3 startPt, Vector3 endPt)
+    {
+        // Create X axis
+        List<Vector3> xVectors = new List<Vector3>();
+        xVectors.Add(startPt);
+        xVectors.Add(endPt);
+        xLine.SetPositions(xVectors.ToArray());
+
+        return xLine;
+    }
+
+
     public static Vector3 CenterOfVectors(List<Vector3> vectors)
     {
         Vector3 sum = Vector3.zero;

@@ -53,6 +53,10 @@ public class CalibrationManager : MonoBehaviour, IMixedRealitySpeechHandler
     private bool _renderPointCloud = true;
     private bool _isLocked = false;
 
+    private bool _isCalibrating = false;
+    private GameObject _calibrateObject;
+    private LineRenderer _calibrateLine;
+
 #if ENABLE_WINMD_SUPPORT
     Windows.Perception.Spatial.SpatialCoordinateSystem unityWorldOrigin;
 #endif
@@ -75,6 +79,20 @@ public class CalibrationManager : MonoBehaviour, IMixedRealitySpeechHandler
         _origin = Helpers.CreateAxis(whiteMat, _baseLineWidth, _baseOriginLen, _baseGradLen);
         _origin.transform.position = new Vector3(0, 0, 0);
         _origin.transform.rotation = Quaternion.identity;
+
+        LineRenderer xLine = gameObject.AddComponent<LineRenderer>();
+        xLine.material = whiteMat;
+        xLine.useWorldSpace = true;
+        xLine.startWidth = 0.001f;
+        xLine.endWidth = 0.001f;
+
+        List<Vector3> xVectors = new List<Vector3>();
+        xVectors.Add(Vector3.zero);
+        xVectors.Add(Vector3.forward);
+        xLine.SetPositions(xVectors.ToArray());
+
+        //_calibrateObject = Helpers.CreateLine(whiteMat, 0.001f, Vector3.zero, Vector3.forward);
+        //_calibrateLine = _calibrateObject.GetComponent<LineRenderer>();
 
         InitResearchMode();
     }
@@ -142,6 +160,20 @@ public class CalibrationManager : MonoBehaviour, IMixedRealitySpeechHandler
 
         if (_renderPointCloud)
             _pointCloudRenderer.Render(CurrentSensorList.ToArray(), pointColor, CurrentClosePoint);
+
+        if (_isCalibrating)
+        {
+            var endpoint = _curCamPosition + _curForward;
+            //MyInfo.text = $"({_curCamPosition.x},{_curCamPosition.y},{_curCamPosition.z}) ({endpoint.x},{endpoint.y},{endpoint.z})";
+
+            LineRenderer xLine = gameObject.GetComponent<LineRenderer>();
+            List<Vector3> xVectors = new List<Vector3>();
+            xVectors.Add(_curCamPosition);
+            xVectors.Add(endpoint);
+            xLine.SetPositions(xVectors.ToArray());
+
+            //_calibrateLine = Helpers.UpdateLine(_calibrateObject.GetComponent<LineRenderer>(), _curCamPosition, endpoint);
+        }
     }
 
     private void OnApplicationFocus(bool focus)
@@ -271,6 +303,11 @@ public class CalibrationManager : MonoBehaviour, IMixedRealitySpeechHandler
                 _calibrate += 0.001f;
                 val = Convert.ToInt32(_calibrate * 1000);
                 MyInfo.text += $"calibrate={val} mm\r\n";
+                break;
+
+            case "start calibrate":
+                _isCalibrating = true;
+                MyInfo.text += "_isCalibrating = true\r\n";
                 break;
 
             default:
